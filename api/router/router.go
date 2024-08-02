@@ -24,15 +24,23 @@ func New(l *zerolog.Logger, v *validator.Validate) *chi.Mux {
         r.Use(middleware.RequestId)
         r.Use(middleware.ContentTypeJSON)
 
-        r.Get("/health", health.Read)
-
-        r.Route("/test", func(r chi.Router) {
-            testApi := test.New(l, v)
+        r.Route("/health", func(r chi.Router) {
+            healthApi := health.New(l, v)
             r.Method(
-                http.MethodPost,
-                "/{number}",
-                requestlog.NewHandler(testApi.TestEndpoint, l),
-            ),
+                http.MethodGet, 
+                "/health",
+                requestlog.NewHandler(healthApi.Health, l),
+            )
+            r.Method(
+                http.MethodPost, 
+                "/health", 
+                requestlog.NewHandler(healthApi.BodyRequest, l),
+            )
+            r.Method(
+                http.MethodGet,
+                "/health/{number}",
+                requestlog.NewHandler(healthApi.PathVariableRequest, l),
+            )
         })
     })
 
