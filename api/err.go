@@ -1,4 +1,4 @@
-package err
+package api 
 
 import "net/http"
 

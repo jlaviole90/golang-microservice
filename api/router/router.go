@@ -1,7 +1,7 @@
 package router
 
 import (
-	"employee-worklog-service/api/resources/health"
+	"employee-worklog-service/api/controllers/health"
 	"employee-worklog-service/api/router/middleware"
 	"employee-worklog-service/api/router/middleware/requestlog"
 	"net/http"
@@ -28,17 +28,17 @@ func New(l *zerolog.Logger, v *validator.Validate) *chi.Mux {
             healthApi := health.New(l, v)
             r.Method(
                 http.MethodGet, 
-                "/health",
+                "/",
                 requestlog.NewHandler(healthApi.Health, l),
             )
             r.Method(
                 http.MethodPost, 
-                "/health", 
+                "/", 
                 requestlog.NewHandler(healthApi.BodyRequest, l),
             )
             r.Method(
                 http.MethodGet,
-                "/health/{number}",
+                "/{number}",
                 requestlog.NewHandler(healthApi.PathVariableRequest, l),
             )
         })
